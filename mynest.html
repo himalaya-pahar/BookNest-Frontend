@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Nest (Dashboard) - BookNest</title>
+    <!-- <link rel="stylesheet" href="css/mynest.css"> -->
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo"><span>📚</span> BookNest</a>
+        <nav class="nav-links">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="mynest.html" class="active">My Nest</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="history.html">History</a>
+        </nav>
+        <div class="user-actions">
+            <div class="avatar" style="width: 35px; height: 35px; background-color: #2c5e50;"></div>
+            <a href="index.html" class="btn btn-sm btn-outline">Log Out</a>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 40px;">
+
+        <div class="dashboard-profile">
+            <div class="profile-avatar">
+                <span>NS</span> </div>
+
+            <div class="profile-info">
+                <h1 class="profile-name">Nafis Shahriar</h1>
+                <p class="profile-detail"><strong>Student ID:</strong> 2204034</p>
+                <p class="profile-detail"><strong>Email:</strong> u2204034@student.cuet.ac.bd</p>
+                <p class="profile-detail"><strong>Department:</strong> CSE</p>
+
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Books Posted</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Successful Swaps</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">4.8</span>
+                        <span class="stat-label">Rating</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn btn-outline">Edit Profile</button>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #ddd; margin-bottom: 40px;">
+
+        <div class="section-title">
+            <h2>My Bookshelf (Inventory)</h2>
+            <button class="btn btn-primary">+ Post New Book</button>
+        </div>
+
+        <div class="book-grid">
+            
+            <div class="book-card">
+                <div class="card-img-container">
+                    <span class="condition-badge">Like New</span>
+                    <img src="https://placehold.co/200x300/2c5e50/FFF?text=The+Alchemist" alt="Book Cover" class="book-cover">
+                </div>
+                <div class="card-body">
+                    <h3 class="book-title">The Alchemist</h3>
+                    <p class="book-author">Paulo Coelho</p>
+                    <div class="owner-info">Status: <span style="color:var(--primary-green); font-weight:bold;">Active</span></div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-sm btn-outline" style="flex:1;">Edit</button>
+                        <button class="btn btn-sm btn-danger" style="flex:1;">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="card-img-container">
+                    <span class="condition-badge">Used</span>
+                    <img src="https://placehold.co/200x300/8d6e63/FFF?text=C+++Prog" alt="Book Cover" class="book-cover">
+                </div>
+                <div class="card-body">
+                    <h3 class="book-title">Object Oriented Prog.</h3>
+                    <p class="book-author">Balagurusamy</p>
+                    <div class="owner-info">Status: <span style="color:#f39c12; font-weight:bold;">Swap Pending</span></div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-sm btn-outline" style="flex:1;">Edit</button>
+                        <button class="btn btn-sm btn-danger" style="flex:1;">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">📚 BookNest</div>
+        <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="signin.html">Sign In</a></li>
+        </ul>
+        <p style="font-size:0.78rem;">© 2026 BookNest · CUET A2-02</p>
+    </footer>
+    <script src="javascript/mynest.js"></script>
+</body>
+</html>

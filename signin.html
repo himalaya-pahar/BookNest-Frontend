@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - BookNest</title>
+    <!-- <link rel="stylesheet" href="css/signin.css" /> -->
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo"><span>📚</span> BookNest</a>
+    </header>
+
+    <div class="container auth-wrapper">
+      <div class="auth-card">
+        <h2 style="margin-bottom: 20px; color: var(--primary-green)">
+          Welcome Back
+        </h2>
+        <form id="signin-form">
+          <input
+            type="email"
+            id="signin-email"
+            class="auth-input"
+            placeholder="Enter your email"
+            required
+          />
+          <input
+            type="password"
+            id="signin-password"
+            class="auth-input"
+            placeholder="Password"
+            required
+          />
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Log In
+          </button>
+          <p
+            id="signin-error"
+            style="
+              color: #e74c3c;
+              margin-top: 10px;
+              display: none;
+              font-weight: bold;
+              font-size: 0.9rem;
+            "
+          >
+            Invalid credentials
+          </p>
+        </form>
+        <p style="margin-top: 15px">
+          Don't have an account?
+          <a href="signup.html" class="auth-link">Sign Up</a>
+        </p>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-logo">📚 BookNest</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+      </ul>
+      <p style="font-size: 0.78rem">© 2026 BookNest · CUET A2-02</p>
+    </footer>
+    <script src="javascript/signin.js"></script>
+  </body>
+</html>

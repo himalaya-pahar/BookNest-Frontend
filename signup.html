@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - BookNest</title>
+    <!-- <link rel="stylesheet" href="css/signup.css" /> -->
+  </head>
+  <body>
+    <div class="container auth-wrapper">
+      <div class="auth-card">
+        <h2 style="text-align: center">Sign Up</h2>
+        <form id="signup-form">
+          <input
+            type="email"
+            id="signup-email"
+            class="auth-input"
+            placeholder="EMAIL"
+            required
+          />
+          <input
+            type="text"
+            id="signup-fname"
+            class="auth-input"
+            placeholder="FIRST NAME"
+            required
+          />
+          <input
+            type="text"
+            id="signup-lname"
+            class="auth-input"
+            placeholder="LAST NAME"
+            required
+          />
+          <input
+            type="password"
+            id="signup-password"
+            class="auth-input"
+            placeholder="PASSWORD"
+            required
+          />
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+        <p style="text-align: center">
+          Already have an account?
+          <a href="signin.html" class="auth-link">Log In</a>
+        </p>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-logo">📚 BookNest</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+      </ul>
+      <p style="font-size: 0.78rem">© 2026 BookNest · CUET A2-02</p>
+    </footer>
+    <script src="javascript/signup.js"></script>
+  </body>
+</html>
