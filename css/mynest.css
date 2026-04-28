@@ -521,3 +521,55 @@ footer {
     margin-top: 20px;
   }
 }
+
+/* --- Toast Notifications --- */
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10000;
+}
+
+.toast {
+  background: var(--bg-card);
+  color: var(--text-dark);
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-left: 5px solid var(--primary-green);
+  /* Slide in, then wait 2.5 seconds, then fade out */
+  animation:
+    slideIn 0.3s ease-out forwards,
+    fadeOut 0.5s 2.5s forwards;
+}
+
+.toast.error {
+  border-left-color: #c0392b;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
