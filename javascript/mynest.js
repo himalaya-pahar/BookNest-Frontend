@@ -3,10 +3,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // UI Elements
   const profileName = document.querySelector(".profile-name");
-  const profileEmail = document.querySelectorAll(".profile-detail")[1];
-  const profileAvatar = document.querySelector(".profile-avatar span");
+  const profileEmail = document.getElementById("profile-email");
+  const profilePhone = document.getElementById("profile-phone");
+  const profileAddress = document.getElementById("profile-address");
+  const profileAvatar = document.getElementById("avatar-initials");
+
+  const statPosted = document.getElementById("stat-posted");
+  const statSwaps = document.getElementById("stat-swaps");
+  const statPending = document.getElementById("stat-pending");
+
   const bookGrid = document.querySelector(".book-grid");
-  const statsPosted = document.querySelector(".stat-number"); // First stat box
 
   // 1. Load User Profile Data
   async function loadProfile() {
@@ -17,17 +23,52 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       if (response.ok) {
         const user = await response.json();
+
+        // Inject Text
         profileName.textContent = user.name;
-        profileEmail.innerHTML = `<strong>Email:</strong> ${user.email}`;
-        const initials = user.name.substring(0, 2).toUpperCase();
-        profileAvatar.textContent = initials;
+        profileEmail.textContent = user.email;
+
+        // If phone/address is null, show a placeholder
+        profilePhone.textContent = user.phone_no
+          ? user.phone_no
+          : "Not added yet";
+        profileAddress.textContent = user.address
+          ? user.address
+          : "Not added yet";
+
+        // Avatar
+        profileAvatar.textContent = user.name.substring(0, 2).toUpperCase();
       }
     } catch (error) {
       console.error("Failed to load profile:", error);
     }
   }
+  // 2. Load Stats (Books Posted, Pending Requests)
+  async function loadStats(myBooksCount) {
+    // Update Posted Stat
+    statPosted.textContent = myBooksCount;
 
-  // 2. Load User's Bookshelf and Check Marketplace Status
+    try {
+      // Fetch Pending Requests
+      const pendingRes = await fetch("http://127.0.0.1:8000/booklog/request", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (pendingRes.ok) {
+        const pendingRequests = await pendingRes.json();
+        statPending.textContent = pendingRequests.length;
+      } else {
+        statPending.textContent = "0"; // 404 means 0 requests
+      }
+
+      // Note: Successful swaps route doesn't exist in backend yet, keeping it at 0
+      statSwaps.textContent = "0";
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    }
+  }
+
+  // 3. Load Bookshelf
   async function loadBookshelf() {
     bookGrid.innerHTML =
       '<p style="text-align:center; width:100%;">Loading your bookshelf...</p>';
@@ -37,7 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // We check the booklogs to see which of our books are "Public"
       const logsResponse = await fetch("http://127.0.0.1:8000/booklog/", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -45,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (booksResponse.status === 404) {
         bookGrid.innerHTML =
           '<p style="text-align: center; width: 100%;">Your bookshelf is empty.</p>';
-        statsPosted.textContent = "0";
+        loadStats(0); // 0 books posted
         return;
       }
 
@@ -53,9 +93,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       const activeLogs = logsResponse.ok ? await logsResponse.json() : [];
 
       // Create a list of IDs that are already in the marketplace
-      const activeIds = activeLogs.map((log) => log.book_id);
+      const activeIds = activeLogs.map((log) => log.book_id || log.id);
 
-      statsPosted.textContent = myBooks.length;
+      // 1. Filter your books to only count the ones that are in the activeIds list
+      const marketplaceBooks = myBooks.filter((book) =>
+        activeIds.includes(book.id),
+      );
+
+      // 2. Update the stats with ONLY the marketplace count!
+      loadStats(marketplaceBooks.length);
+
       bookGrid.innerHTML = "";
 
       myBooks.forEach((book) => {
@@ -93,7 +140,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 3. Function to move a book to the marketplace
+  function showToast(message, type = "success") {
+    const toastContainer = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`; // type can be "success" or "error"
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    // Remove it from the HTML after the animation finishes (3 seconds total)
+    setTimeout(() => {
+      toast.remove();
+    }, 5000);
+  }
+
+  // --- FUNCTION: Move to Marketplace ---
   window.listInMarketplace = async (bookId) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/booklog/${bookId}`, {
@@ -101,21 +162,58 @@ document.addEventListener("DOMContentLoaded", async () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) {
-        alert("Book is now live in the Marketplace!");
-        loadBookshelf(); // Refresh the list
+        showToast("Book is now live in the Marketplace!", "success"); // <-- Replaced alert!
+        loadBookshelf();
+      } else {
+        showToast("Failed to list book.", "error");
       }
     } catch (error) {
-      alert("Failed to list book.");
+      showToast("Network error occurred.", "error");
     }
   };
 
-  // 4. Function to delete a book (You need to add this to your backend later!)
-  window.deleteBook = async (bookId) => {
-    if (confirm("Are you sure you want to delete this book?")) {
-      alert("Delete functionality needs a Backend Route first!");
-      // Once your friend adds a DELETE route, you can call it here.
-    }
+  // --- FUNCTION: Delete Book Logic ---
+  const confirmModal = document.getElementById("confirm-modal");
+  const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+  const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+  let bookToDeleteId = null; // Store the ID temporarily
+
+  // Triggered when user clicks "Delete Book" on the card
+  window.deleteBook = (bookId) => {
+    bookToDeleteId = bookId;
+    confirmModal.style.display = "flex"; // Show custom modal
   };
+
+  // If they click Cancel
+  cancelDeleteBtn.addEventListener("click", () => {
+    confirmModal.style.display = "none";
+    bookToDeleteId = null;
+  });
+
+  // If they click Yes, Delete
+  confirmDeleteBtn.addEventListener("click", async () => {
+    if (!bookToDeleteId) return;
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/book/${bookToDeleteId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (response.ok) {
+        confirmModal.style.display = "none";
+        showToast("Book deleted successfully", "success"); // <-- Beautiful popup
+        loadBookshelf(); // Refresh UI
+      } else {
+        showToast("Failed to delete book", "error");
+      }
+    } catch (error) {
+      showToast("Network error", "error");
+    }
+  });
 
   // Initial calls
   loadProfile();
@@ -154,6 +252,66 @@ document.addEventListener("DOMContentLoaded", async () => {
       addModal.style.display = "none";
       addBookForm.reset();
       loadBookshelf(); // Refresh UI
+    }
+  });
+
+  // --- EDIT PROFILE MODAL LOGIC ---
+  const editModal = document.getElementById("edit-profile-modal");
+  const editBtn = document.querySelector(".profile-info .btn-outline"); // The "Edit Profile" button
+  const closeEditBtn = document.getElementById("close-edit-modal");
+  const editProfileForm = document.getElementById("edit-profile-form");
+
+  // 1. Open Modal & Pre-fill current data
+  editBtn.addEventListener("click", () => {
+    document.getElementById("edit-name").value = profileName.textContent;
+
+    // If it says "Not added yet", leave the input blank. Otherwise, put their current phone/address in.
+    document.getElementById("edit-phone").value =
+      profilePhone.textContent === "Not added yet"
+        ? ""
+        : profilePhone.textContent;
+    document.getElementById("edit-address").value =
+      profileAddress.textContent === "Not added yet"
+        ? ""
+        : profileAddress.textContent;
+
+    editModal.style.display = "flex";
+  });
+
+  // 2. Close Modal
+  closeEditBtn.addEventListener(
+    "click",
+    () => (editModal.style.display = "none"),
+  );
+
+  // 3. Submit the updated data to the Backend
+  editProfileForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const updateData = {
+      name: document.getElementById("edit-name").value,
+      phone_no: document.getElementById("edit-phone").value,
+      address: document.getElementById("edit-address").value,
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/user/", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (response.ok) {
+        editModal.style.display = "none";
+        loadProfile(); // Instantly refresh the UI with new data!
+      } else {
+        alert("Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
   });
 });

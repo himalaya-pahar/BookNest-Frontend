@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Build the URL with the Query Parameters!
-      let url = new URL("http://127.0.0.1:8000/book/all");
+      let url = new URL("http://127.0.0.1:8000/booklog");
       if (searchQuery) url.searchParams.append("q", searchQuery);
       if (genreFilter !== "All") url.searchParams.append("genre", genreFilter);
 
