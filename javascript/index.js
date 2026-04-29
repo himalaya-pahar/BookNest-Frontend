@@ -1,52 +1,48 @@
-// Scroll reveal for steps
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add("visible"), i * 150);
-      }
-    });
-  },
-  { threshold: 0.2 },
-);
-document.querySelectorAll(".step").forEach((el) => observer.observe(el));
-// Authentication Check & Header Logic
-document.addEventListener("DOMContentLoaded", () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const protectedPages = ["mynest", "message", "history", "wishlist"];
+document.addEventListener("DOMContentLoaded", async () => {
+  // Define the live API endpoint URL hosted on Render
+  const API_URL = "https://booknest-backend-fastapi-1.onrender.com/api/booknest-stats";
 
-  // Simple path check
-  const isProtected = protectedPages.some((page) =>
-    window.location.pathname.includes(page + ".html"),
-  );
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error("Network response was not ok");
+    
+    const data = await response.json();
+    
+    // Function to animate numbers counting up from zero
+    const animateValue = (id, endValue) => {
+      const obj = document.getElementById(id);
+      const duration = 1500; // Animation duration in milliseconds
+      const startTime = performance.now();
 
-  // If not logged in and on protected page, kick to sign in
-  if (!currentUser && isProtected) {
-    window.location.href = "signin.html";
-    return;
-  }
-
-  // Login Condition is good
-  if (currentUser) {
-    const userActions = document.querySelector(".user-actions");
-    if (userActions) {
-      const initials = (
-        currentUser.fname[0] + currentUser.lname[0]
-      ).toUpperCase();
-      userActions.innerHTML = `
-                <div class="header-avatar" style="width: 35px; height: 35px; background-color: var(--primary-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${initials}</div>
-                <a href="#" class="btn btn-sm btn-outline" id="logout-btn">Log Out</a>
-            `;
-
-      document.getElementById("logout-btn").addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("currentUser");
-        if (isProtected) {
-          window.location.href = "index.html";
+      const step = (currentTime) => {
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const currentCount = Math.floor(progress * endValue);
+        
+        // Update the text content with a '+' sign
+        obj.textContent = `${currentCount}+`;
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
         } else {
-          window.location.reload();
+          // Ensure the final value is exactly the fetched data
+          obj.textContent = `${endValue}+`;
         }
-      });
-    }
+      };
+      
+      window.requestAnimationFrame(step);
+    };
+
+    // Trigger animations with the fetched database statistics
+    animateValue("stat-books", data.books);
+    animateValue("stat-readers", data.readers);
+    animateValue("stat-genres", data.genres);
+
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    
+    // Fallback values in case the server is offline or fetch fails
+    document.getElementById("stat-books").textContent = "0+";
+    document.getElementById("stat-readers").textContent = "0+";
+    document.getElementById("stat-genres").textContent = "0+";
   }
 });
