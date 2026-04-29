@@ -28,7 +28,7 @@ function loadWishlistBooks() {
         return;
     }
 
-    fetch("http://127.0.0.1:8000/wishlist/", {
+    fetch("https://booknest-backend-fastapi-1.onrender.com/wishlist/", {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
@@ -88,7 +88,7 @@ function addToWishlist(title, author, condition) {
         condition: condition
     };
 
-    fetch("http://127.0.0.1:8000/wishlist/", {
+    fetch("https://booknest-backend-fastapi-1.onrender.com/wishlist/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const completedBody = document.getElementById("completed-body");
 
   async function loadHistory() {
-    const res = await fetch("http://127.0.0.1:8000/booklog/history/all", {
+    const res = await fetch("https://booknest-backend-fastapi-1.onrender.com/booklog/history/all", {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // This function is called from BOTH the table (Accept/Reject) and the Modal (Confirm)
   window.updateReq = async (id, status) => {
     const res = await fetch(
-      `http://127.0.0.1:8000/booklog/request/${id}?upd=${status}`,
+      `https://booknest-backend-fastapi-1.onrender.com/booklog/request/${id}?upd=${status}`,
       {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },

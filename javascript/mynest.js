@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 1. Load User Profile Data
   async function loadProfile() {
     try {
-      const response = await fetch("http://127.0.0.1:8000/user/", {
+      const response = await fetch("https://booknest-backend-fastapi-1.onrender.com/user/", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       // Fetch Pending Requests
-      const pendingRes = await fetch("http://127.0.0.1:8000/booklog/request", {
+      const pendingRes = await fetch("https://booknest-backend-fastapi-1.onrender.com/booklog/request", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -74,11 +74,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       '<p style="text-align:center; width:100%;">Loading your bookshelf...</p>';
 
     try {
-      const booksResponse = await fetch("http://127.0.0.1:8000/book/", {
+      const booksResponse = await fetch("https://booknest-backend-fastapi-1.onrender.com/book/", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const logsResponse = await fetch("http://127.0.0.1:8000/booklog/", {
+      const logsResponse = await fetch("https://booknest-backend-fastapi-1.onrender.com/booklog/", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- FUNCTION: Move to Marketplace ---
   window.listInMarketplace = async (bookId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/booklog/${bookId}`, {
+      const response = await fetch(`https://booknest-backend-fastapi-1.onrender.com/booklog/${bookId}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/book/${bookToDeleteId}`,
+        `https://booknest-backend-fastapi-1.onrender.com/book/${bookToDeleteId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       genre: document.getElementById("new-book-genre").value,
     };
 
-    const response = await fetch("http://127.0.0.1:8000/book/", {
+    const response = await fetch("https://booknest-backend-fastapi-1.onrender.com/book/", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/user/", {
+      const response = await fetch("https://booknest-backend-fastapi-1.onrender.com/user/", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

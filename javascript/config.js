@@ -1,3 +1,3 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "https://booknest-backend-fastapi-1.onrender.com";
 
 const getAuthToken = () => localStorage.getItem("token");

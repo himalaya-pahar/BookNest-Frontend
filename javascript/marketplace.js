@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Build the URL with the Query Parameters!
-      let url = new URL("http://127.0.0.1:8000/booklog");
+      let url = new URL("https://booknest-backend-fastapi-1.onrender.com/booklog");
       if (searchQuery) url.searchParams.append("q", searchQuery);
       if (genreFilter !== "All") url.searchParams.append("genre", genreFilter);
 
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch the CURRENT USER'S books to populate the dropdown
     try {
-      const response = await fetch("http://127.0.0.1:8000/book/", {
+      const response = await fetch("https://booknest-backend-fastapi-1.onrender.com/book/", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // Your backend uses query parameters for POST /booklog/request
       const response = await fetch(
-        `http://127.0.0.1:8000/booklog/request?offered_book=${offeredBookId}&wanted_book=${wantedBookId}`,
+        `https://booknest-backend-fastapi-1.onrender.com/booklog/request?offered_book=${offeredBookId}&wanted_book=${wantedBookId}`,
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
